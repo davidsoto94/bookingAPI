@@ -9,4 +9,6 @@ The Implementation was helped by this article to explain and implement JWT https
 ¿What Tables does de API use?
 -The Tables are de ASP.NET Entity Framework issue to authentication and authorization, join with a Room Table, in this case is only one room, but can increase in case that is necesary, and a reservation Table that has 2 foreign keys, one for the user, and another for the room.
 
+¿Where can i see the methods?
+-In the application Swagger, the service is include in development environment insidel the url given by iss express /swagger.
 
