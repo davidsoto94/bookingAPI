@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Booking.Models
+namespace Booking.Dtos
 {
 
-    public class RegisterModel
+    public class RegisterDto
     {
         [Required(ErrorMessage ="User Name is required")]
         public string Username { get; set; }
