@@ -7,20 +7,20 @@ for the connection string to ensure that is correct.
 The Implementation was helped by this article to explain and implement JWT https://juandavid8a.github.io/tutoriales/2021/07/01/entity-user-net-core-5/ taking changes for the case.
 
 ¿What Tables does the API use?
--The Tables are de ASP.NET Entity Framework issue to authentication and authorization, join with a Room Table, in this case is only one room, but can increase in case that is necesary, and a reservation Table that has 2 foreign keys, one for the user, and another for the room.
+-The Tables are the ASP.NET Entity Framework issue to authentication and authorization, join with a Room Table, in this case is only 1 room, but can increase in case that is necesary, and a reservation Table that has 2 foreign keys, one for the user, and another for the room.
 
-¿Where can i see the methods?
--In the application Swagger, the service is include in development environment insidel the url given by iss express /swagger.
+¿Where can I see the methods?
+-In the application Swagger, the service is include in development environment inside the url given by issexpress /swagger.
 
 The API have, inside the Kubernetes folder in booking, two .yaml files to configure two services, one for sql server, and another for the booking API.
 
-Due to a lack of time i clouldn't make an image with the pre-loaded database, however, in the kubernet service i left it to connect throug localhost connection so it could be populated in development envirement with the dotnet ef migration NameOfMigration command in powershell inside the booking Folder.
+Due to a lack of time I couldn't make an image with the pre-loaded database, however, in the kubernet service I left it to connect througth localhost connection so it could be populated in development environment with the dotnet ef database update command in powershell inside the booking Folder.
 
-once the services are alive it assign a volume that persists even if the pods restart or directly die.
+Once the services are alive, it assign a volume that persists even if the pods restart or directly die.
 
-for informational pourpuses here the are all the API open methods:
+For informational purposes here the are all the API open methods:
 
-POST /Register: to generate an user to Login
+POST /Register: To generate an user to Login.
 
 {
   "username": "string",
@@ -28,7 +28,7 @@ POST /Register: to generate an user to Login
   "password": "string"
 }
 
-POST /Login:    gives back a token to the succesfull login attempt, this token must be copied and put the word Bearer and space and the token to work
+POST /Login:    Gives back a token to the successful login attempt, this token must be copied and put the word Bearer, and space, and the token to work.
 
 
 {
@@ -37,22 +37,22 @@ POST /Login:    gives back a token to the succesfull login attempt, this token m
 }
 
 
-GET /Reservations/Rooms:  show all the rooms created, in this case should be only one, but, since it is a diferent table in the database could be any cuantity.
+GET /Reservations/Rooms:  Show all the rooms created, in this case should be only one, but, since it is a different table in the database could be any quantity.
 
 
-GET /Reservations/Rooms/{id}: show an specific room.
+GET /Reservations/Rooms/{id}: Show an specific room.
 
 
 GET /Ocuppation:   Returns all the reservations made without the id.
 
 
-GET /Reservations/{id}:  returns an specific reservation with the id, that can be get througt /Reservations/MyReservation that only can be seen if you are logged in
+GET /Reservations/{id}:  Returns an specific reservation with the id, that can be get througth /Reservations/MyReservation that only can be seen if you are logged in.
 
 
-GET /Reservations/MyReservation: can only be access with the token given by the login, shows the reservation, if therer is any, for the specific user
+GET /Reservations/MyReservation: Can only be access with the token given by the login, shows the reservation, if there is any, for the specific user.
 
 
-POST /Reservations: can only be access with the token given by the login, creates a reservations and returns the reservation with the id
+POST /Reservations: Can only be access with the token given by the login, creates a reservations and returns the reservation with the id.
 
 
 {
@@ -63,7 +63,7 @@ POST /Reservations: can only be access with the token given by the login, create
 }
 
 
-PUT /Reservations:    can only be access with the token given by the login, modifies, if there is any avaliability, the room reservation.
+PUT /Reservations:    Can only be access with the token given by the login, modifies, if there is any avaliability, the room reservation.
 
 
 {
@@ -74,5 +74,5 @@ PUT /Reservations:    can only be access with the token given by the login, modi
 }
 
 
-DELETE /Reservations/{id}:    can only be access with the token given by the login,deletes the reservation given the id, if it's not that user reservation returns error and a message
+DELETE /Reservations/{id}:    Can only be access with the token given by the login,deletes the reservation given the id, if it's not that user reservation returns error and a message.
 
