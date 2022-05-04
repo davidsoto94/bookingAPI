@@ -63,7 +63,7 @@ POST /Reservations: Can only be access with the token given by the login, create
 }
 
 
-PUT /Reservations:    Can only be access with the token given by the login, modifies, if there is any avaliability, the room reservation.
+PUT /Reservations:    Can only be access with the token given by the login, modifies, if there is any availability, the room reservation.
 
 
 {
@@ -74,5 +74,5 @@ PUT /Reservations:    Can only be access with the token given by the login, modi
 }
 
 
-DELETE /Reservations/{id}:    Can only be access with the token given by the login,deletes the reservation given the id, if it's not that user reservation returns error and a message.
+DELETE /Reservations/{id}:    Can only be access with the token given by the login, deletes the reservation given the id, if it's not that user, the method returns error and a message.
 
