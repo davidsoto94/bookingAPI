@@ -12,9 +12,9 @@ The Implementation was helped by this article to explain and implement JWT https
 ¿Where can I see the methods?
 -In the application Swagger, the service is include in development environment inside the url given by issexpress /swagger.
 
-The API have, inside the Kubernetes folder in booking, two .yaml files to configure two services, one for sql server, and another for the booking API.
+The API have, inside the Kubernetes folder in booking, 2 .yaml files to configure 2 services, one for sql server, and another for the booking API.
 
-Due to a lack of time I couldn't make an image with the pre-loaded database, however, in the kubernet service I left it to connect througth localhost connection so it could be populated in development environment with the dotnet ef database update command in powershell inside the booking Folder.
+Due to a lack of time, I couldn't make an image with the pre-loaded database, however, in the Kubernetes service I left it to connect throught localhost connection so it could be populated in development environment with the "dotnet ef database update" command in powershell inside the booking Folder.
 
 Once the services are alive, it assign a volume that persists even if the pods restart or directly die.
 
@@ -46,7 +46,7 @@ GET /Reservations/Rooms/{id}: Show an specific room.
 GET /Ocuppation:   Returns all the reservations made without the id.
 
 
-GET /Reservations/{id}:  Returns an specific reservation with the id, that can be get througth /Reservations/MyReservation that only can be seen if you are logged in.
+GET /Reservations/{id}:  Returns an specific reservation with the id, that can be get throught /Reservations/MyReservation that only can be seen if you are logged in.
 
 
 GET /Reservations/MyReservation: Can only be access with the token given by the login, shows the reservation, if there is any, for the specific user.
