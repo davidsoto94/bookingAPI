@@ -1,5 +1,6 @@
 using Booking.Data;
 using Booking.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Repositories
 {
@@ -11,67 +12,68 @@ namespace Booking.Repositories
             this.sqlClient = sqlClient;
         }
 
-        public Reservation CreateReservation(Reservation reservation)
+        public async Task<Reservation> CreateReservationAsync(Reservation reservation)
         {
-            sqlClient.Reservations.Add(reservation);
-            sqlClient.SaveChanges();
-            Reservation reservationId = (from r in sqlClient.Reservations
+            await sqlClient.Reservations.AddAsync(reservation);
+            await sqlClient.SaveChangesAsync();
+            Reservation reservationId =  await (from r in sqlClient.Reservations
                                          where r.InitialDate == reservation.InitialDate &&
                                          r.FinalDate == reservation.FinalDate && r.RoomId == reservation.RoomId
-                                         select r).FirstOrDefault();
-            return reservationId;
+                                         select r).FirstOrDefaultAsync();
+            return reservationId;   
         }
 
-        public void CreateRoom(Room room)
+        public async Task CreateRoomAsync(Room room)
         {
-            sqlClient.Rooms.Add(room);
-            sqlClient.SaveChanges();
+            await sqlClient.Rooms.AddAsync(room);
+            await sqlClient.SaveChangesAsync();
+
         }
 
-        public Reservation GetReservation(int id)
+        public async Task<Reservation> GetReservationAsync(int id)
         {
-            Reservation reservation = (from r in sqlClient.Reservations
+            Reservation reservation = await (from r in  sqlClient.Reservations
                                        where r.Id == id
-                                       select r).FirstOrDefault();
+                                       select r).FirstOrDefaultAsync();
             return reservation;
         }
 
-        public IEnumerable<Room> GetRooms()
+        public async Task<IEnumerable<Room>> GetRoomsAsync()
         {
-            return sqlClient.Rooms.ToList();
+            return await sqlClient.Rooms.ToListAsync();
         }
 
-        public Room GetRoom(int id)
+        public async Task<Room> GetRoomAsync(int id)
         {
-            return sqlClient.Rooms.Where(room => room.Id == id).SingleOrDefault();
+            return await sqlClient.Rooms.Where(room => room.Id == id).SingleOrDefaultAsync();
         }
 
-        public IEnumerable<Reservation> GetOccupacy()
+        public async Task<IEnumerable<Reservation>> GetOccupacyAsync()
         {
-            var result = sqlClient.Reservations.Where(reservation => reservation.FinalDate > DateTime.Today);
+            var result = await sqlClient.Reservations.Where(reservation => reservation.FinalDate > DateTime.Today).ToListAsync();
             return result;
         }
 
         //Get the reservation per User
 
-        public IEnumerable<Reservation> GetReservation(string UserId)
+        public async Task<IEnumerable<Reservation>> GetReservationAsync(string UserId)
         {
-            var result = (from r in sqlClient.Reservations
+            var result = await (from r in sqlClient.Reservations
                           where r.UserId == UserId && r.FinalDate > DateTime.Today
-                          select r);
+                          select r).ToListAsync();
             return result;
         }
 
-        public void UpdateReservation(Reservation reservation)
+        public async Task UpdateReservationAsync(Reservation reservation)
         {
-            sqlClient.Entry(sqlClient.Reservations.FirstOrDefault(x => x.Id == reservation.Id)).CurrentValues.SetValues(reservation);
-            sqlClient.SaveChanges();
+            sqlClient.Entry(sqlClient.Reservations.FirstOrDefaultAsync(x => x.Id == reservation.Id)).CurrentValues.SetValues(reservation);
+            await sqlClient.SaveChangesAsync();
         }
 
-        public void DeleteReservation(Reservation reservation)
+        public async Task DeleteReservationAsync(Reservation reservation)
         {
             sqlClient.Reservations.Remove(reservation);
-            sqlClient.SaveChanges();
+            await sqlClient.SaveChangesAsync();
         }
     }
 }

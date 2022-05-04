@@ -24,9 +24,9 @@ namespace Booking.Controllers
         //GET:/Reservation/Rooms
         [HttpGet]
         [Route("Rooms")]
-        public ActionResult<IEnumerable<RoomDto>> GetRooms()
+        public async Task<ActionResult<IEnumerable<RoomDto>>> GetRoomsAsync()
         {
-            var rooms = repository.GetRooms().Select(room => room.AsDto());
+            var rooms =(await  repository.GetRoomsAsync()).Select(room => room.AsDto());
             if (rooms.Count() <= 0)
             {
                 return NotFound();
@@ -38,10 +38,10 @@ namespace Booking.Controllers
         [HttpGet]
         [Route("Rooms/{id}")]
 
-        public ActionResult<RoomDto> GetRooms(int id)
+        public async Task<ActionResult<RoomDto>> GetRoomsAsync(int id)
         {
 
-            var room = repository.GetRoom(id);
+            var room = await repository.GetRoomAsync(id);
             if (room is null)
             {
                 return NotFound();
@@ -49,22 +49,23 @@ namespace Booking.Controllers
             return room.AsDto();
         }
         //Class to Create new Rooms, however, in this case wont be implemented unless there is roles in the future
-        /*[HttpPost]
+        /*
+        [HttpPost]
         [Route("Rooms")]
-        public ActionResult<RoomDto> CreateRoom(CreateRoomDto roomDto)
+        public async Task<ActionResult<RoomDto>> CreateRoomAsync(CreateRoomDto roomDto)
         {
            Room room =new(){
                MaxOccupants=roomDto.MaxOccupants
            };
-           repository.CreateRoom(room);
+           repository.CreateRoomAsync(room);
            return room.AsDto();
         }*/
 
         [HttpGet]
         [Route("/Ocuppation")]
-        public ActionResult<IEnumerable<ReservationsDto>> GetOcupattion()
+        public async Task<ActionResult<IEnumerable<ReservationsDto>>> GetOcupattionAsync()
         {
-            var reservations =repository.GetOccupacy().Select(reservation=>new ReservationsDto()
+            var reservations = (await repository.GetOccupacyAsync()).Select(reservation=>new ReservationsDto()
             {
                 RoomId = reservation.RoomId,
                 InitialDate = reservation.InitialDate,
@@ -77,9 +78,9 @@ namespace Booking.Controllers
         }
         [HttpGet]
         [Route("{id}")]
-        public ActionResult<ReservationsDto> GetReservations(int id)
+        public async Task<ActionResult<ReservationsDto>> GetReservationsAsync(int id)
         {
-            Reservation reservation =repository.GetReservation(id);
+            Reservation reservation =await repository.GetReservationAsync(id);
             if(reservation is null){
                 return NotFound();
             }
@@ -89,9 +90,9 @@ namespace Booking.Controllers
         [Authorize]
         [HttpGet]
         [Route("MyReservation")]
-        public ActionResult<IEnumerable<ReservationsDto>> GetMyReservation()
+        public async Task<ActionResult<IEnumerable<ReservationsDto>>> GetMyReservationAsync()
         {
-            var reservation =repository.GetReservation(userManager.Users.ToList()[0].Id).Select(reservation=>reservation.AsDto());
+            var reservation =(await repository.GetReservationAsync(userManager.Users.ToList()[0].Id)).Select(reservation=>reservation.AsDto());
             if(reservation.Count() <= 0){
                 return NotFound();
             }
@@ -99,19 +100,19 @@ namespace Booking.Controllers
         }
         [Authorize]
         [HttpPost]
-        public ActionResult<ReservationsDto> CreateReservations(CreateReservationDto reservationDto)
+        public async Task<ActionResult<ReservationsDto>> CreateReservationsAsync(CreateReservationDto reservationDto)
         {
            DateTime initialDate=reservationDto.InitialDate.Date;
            DateTime finalDate=reservationDto.FinalDate.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
            bool overlap=false;
-           foreach(var reservationDate in repository.GetOccupacy().Select(reservation=>reservation.AsDto())){
+           foreach(var reservationDate in (await repository.GetOccupacyAsync()).Select(reservation=>reservation.AsDto())){
                overlap = initialDate < reservationDate.FinalDate && reservationDate.InitialDate < finalDate; 
            }
            if(overlap){
                 return StatusCode(StatusCodes.Status406NotAcceptable, new Response 
                { Status = "Error", Message = "The dates overlap with a previus reservation" });
            }
-           if(repository.GetRoom(reservationDto.RoomId) is null){
+           if(await repository.GetRoomAsync(reservationDto.RoomId) is null){
                 return StatusCode(StatusCodes.Status406NotAcceptable, new Response 
                { Status = "Error", Message = "Please enter a valid room id" });
            }
@@ -134,22 +135,22 @@ namespace Booking.Controllers
                 InitialDate=initialDate,
                 FinalDate= finalDate
             };
-            var result=repository.CreateReservation(reservation);
-            return CreatedAtAction(nameof(GetReservations), new{id=result.Id},result.AsDto());
+            var result=await repository.CreateReservationAsync(reservation);
+            return CreatedAtAction(nameof(GetReservationsAsync), new{id=result.Id},result.AsDto());
         }
         [Authorize]
         [HttpPut]
-        public ActionResult UpdateReservation(UpdateReservationsDto reservationDto)
+        public async Task<ActionResult> UpdateReservationAsync(UpdateReservationsDto reservationDto)
         {
            DateTime initialDate=reservationDto.InitialDate.Date;
            DateTime finalDate=reservationDto.FinalDate.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
-           if(repository.GetReservation(reservationDto.Id) is null){
+           if(await repository.GetReservationAsync(reservationDto.Id) is null){
                 return StatusCode(StatusCodes.Status406NotAcceptable, new Response 
                { Status = "Error", Message = "The reservation Id is not valid" });
            }
            
            bool overlap=false;
-           foreach(var reservationDate in repository.GetOccupacy()){
+           foreach(var reservationDate in await repository.GetOccupacyAsync()){
                if(reservationDate.Id!=reservationDto.Id){
                    overlap = initialDate < reservationDate.FinalDate && reservationDate.InitialDate < finalDate; 
                }
@@ -159,7 +160,7 @@ namespace Booking.Controllers
                 return StatusCode(StatusCodes.Status406NotAcceptable, new Response 
                { Status = "Error", Message = "The dates overlap with a previus reservation" });
            }
-           if(repository.GetRoom(reservationDto.RoomId) is null){
+           if(repository.GetRoomAsync(reservationDto.RoomId) is null){
                 return StatusCode(StatusCodes.Status406NotAcceptable, new Response 
                { Status = "Error", Message = "Please enter a valid room id" });
            }
@@ -183,15 +184,15 @@ namespace Booking.Controllers
                 InitialDate=initialDate,
                 FinalDate= finalDate
             };
-            repository.UpdateReservation(reservation);
+            await repository.UpdateReservationAsync(reservation);
             return NoContent();
         }
 
         [Authorize]
         [HttpDelete("{Id}")]
-        public ActionResult DeleteReservation(int Id)
+        public async Task<ActionResult> DeleteReservationAsync(int Id)
         {
-           var reservation=repository.GetReservation(Id);
+           var reservation= await repository.GetReservationAsync(Id);
            if( reservation is null){
                 return StatusCode(StatusCodes.Status406NotAcceptable, new Response 
                { Status = "Error", Message = "The reservation Id is not valid" });
@@ -200,7 +201,7 @@ namespace Booking.Controllers
                return StatusCode(StatusCodes.Status406NotAcceptable, new Response 
                { Status = "Error", Message = "This user do not own this reservation" });
            }
-            repository.DeleteReservation(reservation);
+            await repository.DeleteReservationAsync(reservation);
             return NoContent();
         }
 

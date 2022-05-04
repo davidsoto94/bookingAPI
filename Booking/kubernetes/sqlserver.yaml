@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sqlserver-statefulset
+spec:
+  selector:
+    matchLabels:
+      app: sqlserver
+  serviceName: sqlserver-service
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: sqlserver
+    spec:
+      containers:
+      - name: sqlserver
+        image: mcr.microsoft.com/mssql/server
+        ports:
+        - containerPort: 1433
+          name: web
+        env:
+          - name: MSSQL_PID
+            value: "Developer"
+          - name: ACCEPT_EULA
+            value: "Y"
+          - name: "SA_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                name: booking-secrets
+                key: sqlserver-password
+        volumeMounts:
+          - mountPath: /data/db
+            name: data
+  volumeClaimTemplates:
+    - metadata: 
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sqlserver-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: sqlserver
+  ports:
+  - port: 1433
+    targetPort: 1433
+
+
+

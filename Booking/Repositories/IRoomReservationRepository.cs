@@ -4,16 +4,16 @@ namespace Booking.Repositories
 {
     public interface IRoomReservationRepository
     {
-        IEnumerable<Room> GetRooms();
-        Room GetRoom(int id);
-        void CreateRoom(Room room);
-        Reservation GetReservation(int id);
-        IEnumerable<Reservation> GetReservation(string UserId);
-        IEnumerable<Reservation> GetOccupacy();
-        Reservation CreateReservation(Reservation reservation);
+        Task<IEnumerable<Room>> GetRoomsAsync();
+        Task<Room> GetRoomAsync(int id);
+        Task CreateRoomAsync(Room room);
+        Task<Reservation> GetReservationAsync(int id);
+        Task<IEnumerable<Reservation>> GetReservationAsync(string UserId);
+        Task<IEnumerable<Reservation>> GetOccupacyAsync();
+        Task<Reservation> CreateReservationAsync(Reservation reservation);
 
-        void UpdateReservation(Reservation reservation);
-        void DeleteReservation(Reservation reservation);
+        Task UpdateReservationAsync(Reservation reservation);
+        Task DeleteReservationAsync(Reservation reservation);
         
     }
 }

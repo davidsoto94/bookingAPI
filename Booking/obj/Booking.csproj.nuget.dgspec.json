@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\david\\Desktop\\Booking API\\Booking\\Booking.csproj": {}
+    "C:\\Users\\david\\Desktop\\Booking API\\booking\\Booking.csproj": {}
   },
   "projects": {
-    "C:\\Users\\david\\Desktop\\Booking API\\Booking\\Booking.csproj": {
+    "C:\\Users\\david\\Desktop\\Booking API\\booking\\Booking.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\david\\Desktop\\Booking API\\Booking\\Booking.csproj",
+        "projectUniqueName": "C:\\Users\\david\\Desktop\\Booking API\\booking\\Booking.csproj",
         "projectName": "Booking",
-        "projectPath": "C:\\Users\\david\\Desktop\\Booking API\\Booking\\Booking.csproj",
+        "projectPath": "C:\\Users\\david\\Desktop\\Booking API\\booking\\Booking.csproj",
         "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\david\\Desktop\\Booking API\\Booking\\obj\\",
+        "outputPath": "C:\\Users\\david\\Desktop\\Booking API\\booking\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\david\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,6 +40,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "AspNetCore.HealthChecks.SqlServer": {
+              "target": "Package",
+              "version": "[6.0.2, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[6.0.4, )"
