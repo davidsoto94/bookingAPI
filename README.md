@@ -12,3 +12,4 @@ The Implementation was helped by this article to explain and implement JWT https
 ¿Where can i see the methods?
 -In the application Swagger, the service is include in development environment insidel the url given by iss express /swagger.
 
+The API 
